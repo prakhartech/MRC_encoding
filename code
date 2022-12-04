@@ -1,0 +1,42 @@
+inputStr = input('String')
+cg_content = 0 
+total_content = 0
+cnt = 0
+mapping = { 'ACGT': {0: 'A', 1: 'C', 2: 'G', 3: 'T'}, 'AT': {0: 'A', 1: 'T'}, 'CG': {0: 'C' ,1: 'G'}, 'Not_G': {0: 'A' ,1: 'C', 2: 'T'}, 'Not_C': {0: 'A' ,1: 'G' ,2: 'T'}, 'Not_A': {0: 'C' ,1: 'G' ,2: 'T'}, 'Not_T': {0: 'A' ,1: 'C' ,2: 'G'}}
+result = ""
+temp = inputStr
+prev = '0'
+while temp!='0':
+	cur_cg_content = 0.5
+	if (total_content != 0):
+		cur_cg_content = cg_content/(total_content*1.0)
+	current = int(temp,2)
+	if (cur_cg_content > 0.6):
+		nt = mapping["AT"][current%len(mapping["AT"])]
+		current = current/len(mapping["AT"])
+	elif (cur_cg_content < 0.4):
+		nt = mapping["CG"][current%len(mapping["CG"])]
+		current /= current/len(mapping["CG"])
+	else:
+		if (cnt == 3):
+			use = "Not_"
+			use = use + prev
+			nt = mapping[use][current%len(mapping[use])]
+			current = current/len(mapping[use])
+		else:
+			nt = mapping["ACGT"][current%len(mapping["ACGT"])]
+			current = current/len(mapping["ACGT"])
+	if (prev == nt):
+		cnt = cnt + 1
+	else:
+		cnt = 1
+	result = result+nt
+	prev = nt
+	if (nt == 'C' or nt =='G'):
+		cg_content = cg_content+1
+	total_content = total_content+1
+	temp = bin(int(current)).replace("0b","")
+print(result)
+
+
+
